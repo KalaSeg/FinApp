@@ -1,0 +1,84 @@
+{% extends 'base.html'%}
+
+{% block styles %}
+<style>
+    .blog-post {
+        background-color: white;
+        padding: 22px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid #c9a227;
+        max-width: 850px;
+    }
+
+    .blog-post h2 {
+        margin-top: 0;
+        color: #0b1f33;
+    }
+
+    .blog-post p {
+        color: #4a5568;
+        font-size: 1.05rem;
+    }
+
+    .blog-post .author {
+        font-style: italic;
+        color: #718096;
+    }
+
+    .blog-post .date {
+        color: #8a94a6;
+        font-size: 0.9rem;
+    }
+
+    .blog-post .content {
+        margin-top: 20px;
+    }
+
+    .blog-post .read-more {
+        color: #0b1f33;
+        text-decoration: none;
+        font-weight: bold;
+        border-bottom: 2px solid #c9a227;
+    }
+
+    .blog-post .read-more:hover {
+        color: #c9a227;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div>
+    <div class="blog-post">
+        <h2>Quarterly Treasury Update for Business Clients</h2>
+        <p class="author">By TrustUs Financial Advisory Team</p>
+        <p class="date">Published on December 24, 2024</p>
+        <div class="content">
+            <p>Our latest treasury update highlights cash-flow planning, payment approval workflows, and recommended controls for high-value transfers during the quarter-end close...</p>
+            <a href="#" class="read-more">Read more...</a>
+        </div>
+    </div>
+
+    <div class="blog-post">
+        <h2>Reducing Payment Delays in Global Operations</h2>
+        <p class="author">By TrustUs Financial Payments Group</p>
+        <p class="date">Published on December 20, 2024</p>
+        <div class="content">
+            <p>International transfers can be slowed by missing approvals, incomplete beneficiary details, and manual reconciliation. Here are practical steps to improve payment efficiency...</p>
+            <a href="#" class="read-more">Read more...</a>
+        </div>
+    </div>
+
+    <div class="blog-post">
+        <h2>Client Portal Security: Best Practices for Finance Teams</h2>
+        <p class="author">By TrustUs Financial Digital Banking</p>
+        <p class="date">Published on December 15, 2024</p>
+        <div class="content">
+            <p>Finance teams should review portal access, approval limits, and document handling procedures regularly to reduce operational risk and protect sensitive account information...</p>
+            <a href="#" class="read-more">Read more...</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

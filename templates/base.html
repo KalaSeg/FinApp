@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustUs Financial</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1f2933;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #0b1f33;
+            color: #fff;
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #c9a227;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        header .logo span {
+            color: #c9a227;
+        }
+
+        header nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        header nav a:hover {
+            color: #c9a227;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #eef3f8 100%);
+            flex: 1;
+        }
+
+        .hero .text {
+            max-width: 52%;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: bold;
+            margin: 0 0 20px;
+            color: #0b1f33;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0 0 20px;
+            color: #4a5568;
+        }
+
+        .hero a {
+            display: inline-block;
+            text-decoration: none;
+            color: #0b1f33;
+            font-weight: bold;
+            border-bottom: 2px solid #c9a227;
+            padding-bottom: 2px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .hero a:hover {
+            color: #c9a227;
+            border-color: #0b1f33;
+        }
+
+        .hero .image {
+            max-width: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .finance-card {
+            background: #0b1f33;
+            color: #fff;
+            border-radius: 18px;
+            padding: 34px;
+            box-shadow: 0 14px 35px rgba(11, 31, 51, 0.22);
+            max-width: 360px;
+        }
+
+        .finance-card .card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #c9a227;
+        }
+
+        .finance-card .metric {
+            border-top: 1px solid rgba(255,255,255,0.18);
+            padding: 14px 0;
+        }
+
+        .finance-card .metric strong {
+            display: block;
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        footer {
+            background-color: #0b1f33;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 0;
+        }
+    </style>
+    {% block styles %} {% endblock %}
+</head>
+<body>
+    <header>
+        <div class="logo">TrustUs <span>Financial</span></div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="posts">Insights</a>
+            <a href="profile">Client Portal</a>
+        </nav>
+    </header>
+    <section class="hero">
+        {% block body %} {% endblock %}
+    </section>
+    <footer>
+        &copy; 2025 TrustUs Financial. Secure banking, investment, and payment services.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,89 @@
+{% extends 'base.html'%}
+
+{% block styles %}
+<style>
+.profile-container {
+    background: #fff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 330px;
+    border-top: 4px solid #c9a227;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #c9a227;
+}
+
+.username {
+    margin-top: 15px;
+    font-size: 1.4rem;
+    color: #0b1f33;
+}
+
+.account-note {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #718096;
+}
+
+.logout {
+    margin-top: 18px;
+    font-size: 1rem;
+}
+
+.logout a {
+    color: #0b1f33;
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom: 2px solid #c9a227;
+}
+
+.logout a:hover {
+    color: #c9a227;
+}
+</style>
+{% endblock %}
+
+
+{% block body %}
+<div class="profile-container">
+    <img src="data:image/png;base64, [b64_image]" alt="Client Profile Picture" class="profile-picture" id="profile-picture"/>
+    <div class="username">Welcome, <b>{{ username }}</b></div>
+    <div class="account-note">TrustUs Financial Client Portal</div>
+    <div class="logout"><a href="logout">Click here to logout</a></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bucketUrl = "{{ profile_pic_url }}";
+        
+        if (bucketUrl) {
+            const requestUrl = window.location.origin + '/profilepic?bucketurl=' + encodeURIComponent(bucketUrl);
+
+            fetch(requestUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(base64Image => {
+                    const profilePicture = document.getElementById('profile-picture');
+                    if (!profilePicture) {
+                        return;
+                    }
+                    profilePicture.src = 'data:image/png;base64,' + base64Image;
+                })
+                .catch(error => {
+                    console.error('Error fetching or updating image:', error);
+                });
+        }
+    });
+</script>
+{% endblock %}
