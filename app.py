@@ -23,7 +23,7 @@ app.config["DEBUG"] = False
 app.config["TESTING"] = False
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-bucket_name = "trustusy-prd-500409-client-services-storage-prd"
+bucket_name = "trustusy-prd-5004091-client-services-storage-prd"
 credentials_path = "/root/finance-sync.json"
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
