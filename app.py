@@ -11,7 +11,6 @@ import os
 import uuid
 import pathlib
 from google.cloud import storage
-import requests
 import base64
 
 # App configuration
@@ -109,12 +108,6 @@ def upload_file_to_gcp_bucket(
       f"gs://{bucket_name}/{destination_blob_name}"
   )
 
-  blob.make_public()
-
-  print(
-      f"File {destination_blob_name} is now public."
-  )
-
   return f"gs://{bucket_name}/{destination_blob_name}"
 
 
@@ -201,18 +194,27 @@ def profile():
 @app.route("/profilepic", methods=["GET"])
 @login_required
 def profilepic():
-  profile_pic_url = request.args.get("bucketurl")
-  incoming_headers = dict(request.headers)
-  incoming_headers.pop("Host", None)
-  incoming_headers.pop("Cookie", None)
+  profile_pic_name = current_user.photo
 
-  if profile_pic_url:
-    r = requests.get(profile_pic_url, headers=incoming_headers)
-    image_binary = r.content
-    image_encoded = base64.b64encode(image_binary)
-    return image_encoded
+  if not profile_pic_name:
+    return "", 404
 
-  return redirect(url_for("profile"))
+  storage_client = storage.Client.from_service_account_json(
+      credentials_path
+  )
+
+  bucket = storage_client.bucket(bucket_name)
+  blob = bucket.blob(
+      "profilepictures/" + profile_pic_name
+  )
+
+  if not blob.exists():
+    return "", 404
+
+  image_binary = blob.download_as_bytes()
+  image_encoded = base64.b64encode(image_binary)
+
+  return image_encoded
 
 
 
