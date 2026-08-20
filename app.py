@@ -91,12 +91,30 @@ class LoginForm(FlaskForm):
 
 
 # Define bucket file copy function
-def upload_file_to_gcp_bucket(bucket_name, source_file_path, destination_blob_name, credentials_path):
+def upload_file_to_gcp_bucket(
+    bucket_name,
+    source_file_path,
+    destination_blob_name,
+    credentials_path
+):
   storage_client = storage.Client.from_service_account_json(credentials_path)
+
   bucket = storage_client.bucket(bucket_name)
   blob = bucket.blob(destination_blob_name)
+
   blob.upload_from_filename(source_file_path)
-  print(f"File {source_file_path} uploaded to gs://{bucket_name}/{destination_blob_name}")
+
+  print(
+      f"File {source_file_path} uploaded to "
+      f"gs://{bucket_name}/{destination_blob_name}"
+  )
+
+  blob.make_public()
+
+  print(
+      f"File {destination_blob_name} is now public."
+  )
+
   return f"gs://{bucket_name}/{destination_blob_name}"
 
 
