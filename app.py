@@ -10,9 +10,8 @@ from werkzeug.utils import secure_filename
 import os
 import uuid
 import pathlib
-import requests
-from urlib.parse import urlparse
 from google.cloud import storage
+import requests
 import base64
 
 # App configuration
@@ -92,24 +91,12 @@ class LoginForm(FlaskForm):
 
 
 # Define bucket file copy function
-def upload_file_to_gcp_bucket(
-    bucket_name,
-    source_file_path,
-    destination_blob_name,
-    credentials_path
-):
+def upload_file_to_gcp_bucket(bucket_name, source_file_path, destination_blob_name, credentials_path):
   storage_client = storage.Client.from_service_account_json(credentials_path)
-
   bucket = storage_client.bucket(bucket_name)
   blob = bucket.blob(destination_blob_name)
-
   blob.upload_from_filename(source_file_path)
-
-  print(
-      f"File {source_file_path} uploaded to "
-      f"gs://{bucket_name}/{destination_blob_name}"
-  )
-
+  print(f"File {source_file_path} uploaded to gs://{bucket_name}/{destination_blob_name}")
   return f"gs://{bucket_name}/{destination_blob_name}"
 
 
@@ -197,44 +184,17 @@ def profile():
 @login_required
 def profilepic():
   profile_pic_url = request.args.get("bucketurl")
-
-  if not profile_pic_url:
-    return redirect(url_for("profile"))
-
-  parsed = urlparse(profile_pic_url)
-
-  # Private GCS profile pictures: retrieve using the service account
-  if parsed.hostname == "storage.googleapis.com":
-    prefix = "/" + bucket_name + "/profilepictures/"
-
-    if parsed.path.startswith(prefix):
-      object_name = parsed.path[len("/" + bucket_name + "/"):]
-
-      storage_client = storage.Client.from_service_account_json(
-          credentials_path
-      )
-
-      bucket = storage_client.bucket(bucket_name)
-      blob = bucket.blob(object_name)
-
-      if not blob.exists():
-        return "", 404
-
-      image_binary = blob.download_as_bytes()
-      return base64.b64encode(image_binary)
-
-  # Deliberately vulnerable lab behavior:
   incoming_headers = dict(request.headers)
   incoming_headers.pop("Host", None)
   incoming_headers.pop("Cookie", None)
 
-  r = requests.get(
-      profile_pic_url,
-      headers=incoming_headers,
-      timeout=5
-  )
+  if profile_pic_url:
+    r = requests.get(profile_pic_url, headers=incoming_headers)
+    image_binary = r.content
+    image_encoded = base64.b64encode(image_binary)
+    return image_encoded
 
-  return base64.b64encode(r.content)
+  return redirect(url_for("profile"))
 
 
 
