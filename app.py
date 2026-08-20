@@ -10,6 +10,8 @@ from werkzeug.utils import secure_filename
 import os
 import uuid
 import pathlib
+import requests
+from urlib.parse import urlparse
 from google.cloud import storage
 import base64
 
@@ -194,27 +196,45 @@ def profile():
 @app.route("/profilepic", methods=["GET"])
 @login_required
 def profilepic():
-  profile_pic_name = current_user.photo
+  profile_pic_url = request.args.get("bucketurl")
 
-  if not profile_pic_name:
-    return "", 404
+  if not profile_pic_url:
+    return redirect(url_for("profile"))
 
-  storage_client = storage.Client.from_service_account_json(
-      credentials_path
+  parsed = urlparse(profile_pic_url)
+
+  # Private GCS profile pictures: retrieve using the service account
+  if parsed.hostname == "storage.googleapis.com":
+    prefix = "/" + bucket_name + "/profilepictures/"
+
+    if parsed.path.startswith(prefix):
+      object_name = parsed.path[len("/" + bucket_name + "/"):]
+
+      storage_client = storage.Client.from_service_account_json(
+          credentials_path
+      )
+
+      bucket = storage_client.bucket(bucket_name)
+      blob = bucket.blob(object_name)
+
+      if not blob.exists():
+        return "", 404
+
+      image_binary = blob.download_as_bytes()
+      return base64.b64encode(image_binary)
+
+  # Deliberately vulnerable lab behavior:
+  incoming_headers = dict(request.headers)
+  incoming_headers.pop("Host", None)
+  incoming_headers.pop("Cookie", None)
+
+  r = requests.get(
+      profile_pic_url,
+      headers=incoming_headers,
+      timeout=5
   )
 
-  bucket = storage_client.bucket(bucket_name)
-  blob = bucket.blob(
-      "profilepictures/" + profile_pic_name
-  )
-
-  if not blob.exists():
-    return "", 404
-
-  image_binary = blob.download_as_bytes()
-  image_encoded = base64.b64encode(image_binary)
-
-  return image_encoded
+  return base64.b64encode(r.content)
 
 
 
